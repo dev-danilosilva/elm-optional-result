@@ -1,10 +1,10 @@
 module OptionalResultTest exposing (..)
 
+import Dict exposing (Dict)
 import Expect exposing (Expectation)
 import Fuzz exposing (..)
 import OptionalResult
 import Test exposing (..)
-
 
 suite : Test
 suite =
@@ -42,6 +42,56 @@ suite =
                             , Expect.equal (OptionalResult.Success <| v + t + u)
                             , Expect.equal (OptionalResult.Success <| v + u + t)
                             ]
+            , let
+                int_dict = map4
+                           (\t u v w ->
+                                Dict.fromList [ ("t", t)
+                                              , ("u", u)
+                                              , ("w", w)
+                                              , ("v", v)
+                                              ]
+                           )
+                           int int int int
+              in
+                fuzz int_dict "Given a comutative combine function, the map4 argument order does not change the result" <|
+                    \intDict->
+                        let
+                            t = intDict |> Dict.get "t" |> Maybe.withDefault 1
+                            u = intDict |> Dict.get "u" |> Maybe.withDefault 2
+                            v = intDict |> Dict.get "v" |> Maybe.withDefault 3
+                            w = intDict |> Dict.get "w" |> Maybe.withDefault 4
+                        in
+                            OptionalResult.map4 (\a b c d -> a + b + c + d)
+                                (OptionalResult.Success t)
+                                (OptionalResult.Success u)
+                                (OptionalResult.Success v)
+                                (OptionalResult.Success w)
+                                |> Expect.all
+                                    [ Expect.equal (OptionalResult.Success <| t + u + v + w)
+                                    , Expect.equal (OptionalResult.Success <| t + u + w + v)
+                                    , Expect.equal (OptionalResult.Success <| t + v + w + u)
+                                    , Expect.equal (OptionalResult.Success <| t + v + u + w)
+                                    , Expect.equal (OptionalResult.Success <| t + w + u + v)
+                                    , Expect.equal (OptionalResult.Success <| t + w + v + u)
+                                    , Expect.equal (OptionalResult.Success <| u + t + w + v)
+                                    , Expect.equal (OptionalResult.Success <| u + t + v + w)
+                                    , Expect.equal (OptionalResult.Success <| u + w + v + t)
+                                    , Expect.equal (OptionalResult.Success <| u + w + t + v)
+                                    , Expect.equal (OptionalResult.Success <| u + v + w + t)
+                                    , Expect.equal (OptionalResult.Success <| u + v + t + w)
+                                    , Expect.equal (OptionalResult.Success <| v + t + u + w)
+                                    , Expect.equal (OptionalResult.Success <| v + t + w + u)
+                                    , Expect.equal (OptionalResult.Success <| v + w + u + t)
+                                    , Expect.equal (OptionalResult.Success <| v + w + t + u)
+                                    , Expect.equal (OptionalResult.Success <| v + u + w + t)
+                                    , Expect.equal (OptionalResult.Success <| v + u + t + w)
+                                    , Expect.equal (OptionalResult.Success <| w + u + t + v)
+                                    , Expect.equal (OptionalResult.Success <| w + u + v + t)
+                                    , Expect.equal (OptionalResult.Success <| w + t + u + v)
+                                    , Expect.equal (OptionalResult.Success <| w + t + v + u)
+                                    , Expect.equal (OptionalResult.Success <| w + v + t + u)
+                                    , Expect.equal (OptionalResult.Success <| w + v + u + t)
+                                    ]
             , test "mapping4 four equal type values" <|
                 \_ ->
                     OptionalResult.map4 (\x y z w -> x + y + z + w)
