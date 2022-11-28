@@ -59,6 +59,16 @@ suite =
                         (OptionalResult.Success 4)
                         (OptionalResult.Success 5)
                         |> Expect.equal (OptionalResult.Success 15)
+            , test "mapping6 six equal type values" <|
+                \_ ->
+                    OptionalResult.map6 (\s t u v w x-> s + t + u + v + w + x)
+                        (OptionalResult.Success 1)
+                        (OptionalResult.Success 2)
+                        (OptionalResult.Success 3)
+                        (OptionalResult.Success 4)
+                        (OptionalResult.Success 5)
+                        (OptionalResult.Success 6)
+                        |> Expect.equal (OptionalResult.Success 21)
             ]
         , describe "mapping error"
             [ fuzz int "map OptionalResult.Error" <|

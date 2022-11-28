@@ -7,6 +7,7 @@ module OptionalResult exposing
     , map3
     , map4
     , map5
+    , map6
     , mapError
     )
 
@@ -159,6 +160,64 @@ map5 fn or1 or2 or3 or4 or5 =
                                         Success val5 ->
                                             Success <| fn val1 val2 val3 val4 val5
 
+map6 :
+    (a -> b -> c -> d -> e -> f -> g)
+    -> OptionalResult x a
+    -> OptionalResult x b
+    -> OptionalResult x c
+    -> OptionalResult x d
+    -> OptionalResult x e
+    -> OptionalResult x f
+    -> OptionalResult x g
+map6 fn or1 or2 or3 or4 or5 or6 =
+    case or1 of
+        Error error1 ->
+            Error error1
+
+        Empty ->
+            Empty
+
+        Success val1 ->
+            case or2 of
+                Error error2 ->
+                    Error error2
+
+                Empty ->
+                    Empty
+
+                Success val2 ->
+                    case or3 of
+                        Error error3 ->
+                            Error error3
+
+                        Empty ->
+                            Empty
+
+                        Success val3 ->
+                            case or4 of
+                                Error error4 ->
+                                    Error error4
+
+                                Empty ->
+                                    Empty
+
+                                Success val4 ->
+                                    case or5 of
+                                        Error error5 ->
+                                            Error error5
+
+                                        Empty ->
+                                            Empty
+
+                                        Success val5 ->
+                                            case or6 of
+                                                Error error6 ->
+                                                    Error error6
+                                                Empty ->
+                                                    Empty
+
+                                                Success val6 ->
+                                                    Success <| fn val1 val2 val3 val4 val5 val6
 
 mapError : (a -> c) -> OptionalResult a x -> OptionalResult c x
 mapError fn or =
