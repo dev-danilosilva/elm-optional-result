@@ -71,6 +71,12 @@ suite =
                     OptionalResult.map ((+) 1)
                         (OptionalResult.Error x)
                         |> Expect.equal (OptionalResult.Error x)
+            , test "mapping2 an OptionalResult.Error should return first error message" <|
+                \_ ->
+                    OptionalResult.map2 (+)
+                        (OptionalResult.Error "Error Message 1")
+                        (OptionalResult.Error "Error Message 2")
+                        |> Expect.equal (OptionalResult.Error "Error Message 1")
             , test "map2 first argument OptionalResult.Error and second OptionalResult.Empty" <|
                 \_ ->
                     OptionalResult.map2 (+)

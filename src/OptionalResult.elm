@@ -36,10 +36,10 @@ map2 fn or1 or2 =
         ( Success x1, Success x2 ) ->
             Success <| fn x1 x2
 
-        ( _, Error err ) ->
+        ( Error err, _ ) ->
             Error err
 
-        ( Error err, _ ) ->
+        ( _, Error err ) ->
             Error err
 
         _ ->
@@ -160,7 +160,7 @@ map5 fn or1 or2 or3 or4 or5 =
                                             Success <| fn val1 val2 val3 val4 val5
 
 
-mapError : (a -> c) -> OptionalResult a b -> OptionalResult c b
+mapError : (a -> c) -> OptionalResult a x -> OptionalResult c x
 mapError fn or =
     case or of
         Error err ->
@@ -172,6 +172,20 @@ mapError fn or =
         Empty ->
             Empty
 
+mapError2 : (a -> b -> c) -> OptionalResult a x -> OptionalResult b x -> OptionalResult c x
+mapError2 fn or1 or2 =
+    case ( or1, or2 ) of
+        ( Error x1, Error x2 ) ->
+            Error <| fn x1 x2
+
+        ( Success v, _ ) ->
+            Success v
+
+        ( _, Success v ) ->
+            Success v
+
+        _ ->
+            Empty
 
 fromMaybe : Maybe success -> OptionalResult error success
 fromMaybe mb =
