@@ -1,0 +1,15 @@
+{
+  "name": "optional-result",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "elm-test",
+    "lint": "elm-format src tests --validate",
+    "lint-fix" : "elm-format src tests"
+  },
+  "devDependencies": {
+    "elm-format": "^0.8.5",
+    "elm-test": "^0.19.1-revision10"
+  }
+}
