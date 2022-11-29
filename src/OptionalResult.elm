@@ -160,6 +160,7 @@ map5 fn or1 or2 or3 or4 or5 =
                                         Success val5 ->
                                             Success <| fn val1 val2 val3 val4 val5
 
+
 map6 :
     (a -> b -> c -> d -> e -> f -> g)
     -> OptionalResult x a
@@ -213,11 +214,13 @@ map6 fn or1 or2 or3 or4 or5 or6 =
                                             case or6 of
                                                 Error error6 ->
                                                     Error error6
+
                                                 Empty ->
                                                     Empty
 
                                                 Success val6 ->
                                                     Success <| fn val1 val2 val3 val4 val5 val6
+
 
 mapError : (a -> c) -> OptionalResult a x -> OptionalResult c x
 mapError fn or =
@@ -230,6 +233,7 @@ mapError fn or =
 
         Empty ->
             Empty
+
 
 mapError2 : (a -> b -> c) -> OptionalResult a x -> OptionalResult b x -> OptionalResult c x
 mapError2 fn or1 or2 =
@@ -245,6 +249,7 @@ mapError2 fn or1 or2 =
 
         _ ->
             Empty
+
 
 fromMaybe : Maybe success -> OptionalResult error success
 fromMaybe mb =
