@@ -43,11 +43,15 @@ suite =
                             , Expect.equal (OptionalResult.Success <| v + t + u)
                             , Expect.equal (OptionalResult.Success <| v + u + t)
                             ]
-            , fuzz (Fuzz.listOfLength 4 int
-                    |> andThen (\xs -> List.map2 Tuple.pair ["t", "u", "v", "w"] xs
-                                       |> Dict.fromList
-                                       |> constant)
-                   )
+            , fuzz
+                (Fuzz.listOfLength 4 int
+                    |> andThen
+                        (\xs ->
+                            List.map2 Tuple.pair [ "t", "u", "v", "w" ] xs
+                                |> Dict.fromList
+                                |> constant
+                        )
+                )
                 "Given a comutative combine function, the map4 argument order does not change the result"
               <|
                 \intDict ->
