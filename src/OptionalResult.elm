@@ -9,6 +9,7 @@ module OptionalResult exposing
     , map5
     , map6
     , mapError
+    , mapError2
     )
 
 
@@ -234,22 +235,19 @@ mapError fn or =
         Empty ->
             Empty
 
-
-mapError2 : (a -> b -> c) -> OptionalResult a x -> OptionalResult b x -> OptionalResult c x
+mapError2 : (error1 -> error2 -> error3) -> OptionalResult error1 x -> OptionalResult error2 x -> OptionalResult error3 x
 mapError2 fn or1 or2 =
-    case ( or1, or2 ) of
-        ( Error x1, Error x2 ) ->
-            Error <| fn x1 x2
-
-        ( Success v, _ ) ->
-            Success v
-
-        ( _, Success v ) ->
-            Success v
-
-        _ ->
+    case (or1, or2) of
+        (Error err1, Error err2) ->
+            Error <| fn err1 err2
+        (Success suc1, _) ->
+            Success suc1
+        (_, Success suc2) ->
+            Success suc2
+        (Empty, _) ->
             Empty
-
+        (_, Empty) ->
+            Empty
 
 fromMaybe : Maybe success -> OptionalResult error success
 fromMaybe mb =
